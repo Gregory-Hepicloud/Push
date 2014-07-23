@@ -5,11 +5,15 @@ include( "shared.lua" )
 
 print("Push Started")
 
+-- addfile download
+
 resource.AddFile( "content/maps/push_bycrizip.bsp" )
 resource.AddFile( "push_bycrizip.bsp" )
 resource.AddFile( "content/sound/start.wav" )
 resource.AddFile( "start.wav" )
 resource.AddFile( "music.wav" )
+
+-- armes speed et jump boost
 
 function GM:PlayerLoadout( pl )
  
@@ -21,7 +25,7 @@ end
 
 
 
-function GM:PlayerInitialSpawn( ply ) --" When the player first joins the server and spawns" function
+function GM:PlayerInitialSpawn( ply ) -- player spawn ( ajout de skin )
 
 end
 
@@ -30,6 +34,8 @@ local GodMode = {
 		Length = 5
 	}
 }
+
+-- Spawn protection
 
 function GodMode:PlayerSpawn(ply)
 	if !IsValid(ply) then return end
@@ -51,6 +57,8 @@ function GodMode:PlayerSpawn(ply)
 end
 hook.Add("PlayerSpawn", "GE.PlayerSpawn", function(...) GodMode:PlayerSpawn(...) end)
 
+-- Petite explosion quand le joueur touche le sol 
+
 function GM:OnPlayerHitGround( pl )
  
      local boom = ents.Create( "env_explosion" )
@@ -59,6 +67,8 @@ function GM:OnPlayerHitGround( pl )
      boom:Fire( "explode", "", 0 )
 	  
 end
+
+-- Kill counter
 
 function KillCounter( victim, killer, weapon )  
         if killer:GetNWInt("killcounter") == 2 then -- nombre de joueur a tuer
@@ -69,7 +79,7 @@ function KillCounter( victim, killer, weapon )
         end  
             killer:SetNWInt("killcounter", killer:GetNWInt("killcounter") + 1)  -- ajoute a chaque joueur tuer	
     end
-	hook.Add("OnNPCKilled","KillCounter", KillCounter)
+	hook.Add("OnNPCKilled","KillCounter", KillCounter) -- changer ou cree un script detection de player tuer
 	
 	function GM:PlayerHurt( victim, attacker )
     if ( attacker:IsPlayer() ) then
@@ -78,6 +88,8 @@ function KillCounter( victim, killer, weapon )
 		victim:Kill()
     end
 end
+
+-- Partie timer 
 
 local round = {}
 
@@ -111,8 +123,3 @@ end
 timer.Simple(10, function(ply)
 round.Begin() 
 end)
-
-
-function GM:PlayerFootstep( ply, pos, foot, sound, volume, rf ) 
-     return true
- end
